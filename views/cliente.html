@@ -1,0 +1,125 @@
+<% include includes/head.html %>
+<% include includes/menuUsuario.html %>
+<h1>Carro de pedidos</h1>
+
+<div id="pedidoAnotado"><h4></h4></div>
+<div id="pedidoDespachado"><h4></h4></div>
+<div id="mensajeFinal"><h4></h4></div>
+
+<ul class="list-group" id="carro">
+<% if(datosPedido.length == 0){ %>
+    <li class="list-group-item">Carro vacío</li>
+<% }else{ %>
+    <% for(var item in datosPedido) { %>
+      <li class="list-group-item"><span class="badge"><%= datosPedido[item].cantidad; %></span><%= datosPedido[item].nombreProducto; %>, tamaño <%= datosPedido[item].tamanio; %>, masa <%= datosPedido[item].masa; %></li>
+    <% } %>
+<% } %>
+</ul>
+<a href="/usuariosMenuPizzas" class="btn btn-info" id="volverProductos" role="button">Volver a ver productos</a>
+<% if(datosPedido.length != 0){ %>
+    <button type="button" class="btn btn-danger" id="vaciarCarro">Vaciar carro</button>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" id="realizarPedido">Realizar pedido</button>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Confirme o cambie datos de envío</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form" id="datosCliente">
+              <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" value="<%= datosCliente.direccion %>">
+              </div>
+              <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" value="<%= datosCliente.telefono %>">
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= datosCliente.email %>">
+              </div>
+              <input type="hidden" name="nombre" value="<%= datosCliente.nombre %>">
+              <input type="hidden" name="apellido" value="<%= datosCliente.apellido %>">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id="postergarPedido">Postergar pedido</button>
+              <button type="submit" class="btn btn-success">Enviar pedido</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fin Modal -->
+<% } %>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    $(document).ready(function(){
+    //SOCKETS
+        var socket = io('/SK_cliente');
+        socket.on('connect', function(data) {
+            socket.emit('clienteConectado', 'se conectó un cliente: ');
+        });
+
+        socket.on('pedidoAnotado', function(data) {
+            $('#pedidoAnotado h4').html(data);
+            $('#myModal').modal('hide');
+            $('#volverProductos, #vaciarCarro, #realizarPedido').hide();
+
+        });
+
+        socket.on('pedidoDespachado', function(data) {
+            $('#pedidoDespachado h4').html(data);
+        });
+
+        socket.on('cancelarAvisoDePedidoDespachado', function(data) {
+            $('#pedidoDespachado h4').html(data);
+        });
+
+        socket.on('mensajeFinal', function(mensajeFinalCliente) {
+            $('#mensajeFinal h4').html(mensajeFinalCliente);
+            socket.disconnect();
+        });
+
+    //BOTONES
+        $('#vaciarCarro').click(function(event) {
+            $.post( "vaciarCarro", function(data) {
+                if (data) {
+                    $('#carro').html('<li class="list-group-item">Carro vacío</li>');
+                    $('#vaciarCarro, #realizarPedido').hide();
+                };          
+            });
+        });
+        //para que las etiquetas de ejs muestren un valor dentro de un script se debe cambiar el signo igual por un guión
+        var pedido= <%- JSON.stringify(datosPedido) %>;
+        $('#datosCliente').submit(function(e){
+            $(this).find('button[type=submit]').attr('disabled',true);//para evitar envío repetitivo si hace doble click
+            e.preventDefault();
+          //convertir la estructura que genera serializeArray() en un objeto más simple 
+            var cliente=$(this).serializeArray();
+            var cadenaJSON='{';
+            $.each(cliente, function(i, field){
+                cadenaJSON+='"'+field.name + '":"' + field.value + '",';
+            });
+            cadenaJSON=cadenaJSON.slice(0,-1);//sacar última coma
+            cadenaJSON+='}';
+            console.log(cadenaJSON);
+            cliente=JSON.parse(cadenaJSON);
+            console.log(cliente);
+            console.log(pedido);
+            socket.emit('pedidoRealizado', [cliente, pedido]);
+        });
+
+
+
+    });
+    </script>
+    </body>
+</html>  

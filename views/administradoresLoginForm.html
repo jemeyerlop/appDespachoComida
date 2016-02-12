@@ -1,0 +1,17 @@
+<% include includes/head.html %>
+<h1>Login</h1>
+<% if (mensajeError !== ''){ %>
+<h2><%= mensajeError %></h2>
+<% } %>
+<form role="form" method="POST" action="/administradoresLogin">
+	<div class="form-group">
+	  <label for="administrador">Administrador:</label>
+	  <input type="text" class="form-control" id="administrador" name="administrador">
+	</div>
+	<div class="form-group">
+	  <label for="clave">Clave:</label>
+	  <input type="password" class="form-control" id="clave" name="clave">
+	</div>
+  	<button type="submit" class="btn btn-default">Ingresar</button>
+</form>		
+<% include includes/footer.html %>

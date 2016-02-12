@@ -1,0 +1,20 @@
+<% include includes/head.html %>
+<% include includes/menuRollControlGeneral.html %>
+<h1>Modificar pizza</h1>
+<form role="form" method="POST" action="/pizzasModificar">
+	<div class="form-group">
+	  <label for="nombre">Nombre:</label>
+	  <input type="text" class="form-control" id="nombre" name="nombre" value=" <%= nombre %>">
+	</div>
+	<div class="form-group">
+	  <label for="ingredientes">Ingredientes:</label>
+	  <input type="text" class="form-control" id="ingredientes" name="ingredientes" value=" <%= ingredientes %>">
+	</div>
+	<div class="form-group">
+	  <label for="valor">Valor:</label>
+	  <input type="text" class="form-control" id="valor" name="valor" value=" <%= valor %>">
+	</div>
+	<input type="hidden" name="_id" value="<%= _id %>">
+  	<button type="submit" class="btn btn-default">Modificar</button>
+</form>		
+<% include includes/footer.html %>

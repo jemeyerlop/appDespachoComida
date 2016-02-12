@@ -1,0 +1,25 @@
+<% include includes/head.html %>
+<% include includes/menuRollControlGeneral.html %>
+<h1>Agregar administrador</h1>
+<form role="form" method="POST" action="/administradoresAgregar">
+	<div class="form-group">
+	  <label for="administrador">Administrador:</label>
+	  <input type="text" class="form-control" id="administrador" name="administrador">
+	</div>
+	<label for="roll">Roll:</label>
+	<div class="radio">
+  		<label><input type="radio" name="roll" value="Control general">Control general</label>
+	</div>
+	<div class="radio">
+	  	<label><input type="radio" name="roll" value="Cocina" checked>Cocina</label>
+	</div>
+	<div class="radio">
+	  	<label><input type="radio" name="roll" value="Despacho">Despacho</label>
+	</div>
+	<div class="form-group">
+	  <label for="clave">Clave:</label>
+	  <input type="password" class="form-control" id="clave" name="clave">
+	</div>
+  	<button type="submit" class="btn btn-default">Agregar</button>
+</form>		
+<% include includes/footer.html %>

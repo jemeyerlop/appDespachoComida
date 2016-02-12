@@ -1,0 +1,19 @@
+<% include includes/head.html %>
+<% include includes/menuRollControlGeneral.html %>
+<h1>Agregar pizza</h1>
+<form role="form" method="POST" action="/pizzasAgregar">
+	<div class="form-group">
+	  <label for="nombre">Nombre:</label>
+	  <input type="text" class="form-control" id="nombre" name="nombre">
+	</div>
+	<div class="form-group">
+	  <label for="ingredientes">Ingredientes:</label>
+	  <input type="text" class="form-control" id="ingredientes" name="ingredientes">
+	</div>
+	<div class="form-group">
+	  <label for="valor">Valor:</label>
+	  <input type="text" class="form-control" id="valor" name="valor">
+	</div>
+  	<button type="submit" class="btn btn-default">Agregar</button>
+</form>		
+<% include includes/footer.html %>

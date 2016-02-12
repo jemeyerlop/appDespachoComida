@@ -1,0 +1,31 @@
+<% include includes/head.html %>
+<% include includes/menuLibreAcceso.html %>
+<h1>Registrarse como nuevo usuario</h1>
+<form role="form" method="POST" action="/usuariosAgregar">
+	<div class="form-group">
+	  <label for="nombre">Nombre:</label>
+	  <input type="text" class="form-control" id="nombre" name="nombre">
+	</div>
+	<div class="form-group">
+	  <label for="apellido">Apellido:</label>
+	  <input type="text" class="form-control" id="apellido" name="apellido">
+	</div>
+	<div class="form-group">
+	  <label for="direccion">Dirección:</label>
+	  <input type="text" class="form-control" id="direccion" name="direccion">
+	</div>
+	<div class="form-group">
+	  <label for="telefono">Teléfono:</label>
+	  <input type="text" class="form-control" id="telefono" name="telefono">
+	</div>
+	<div class="form-group">
+	  <label for="email">Email:</label>
+	  <input type="email" class="form-control" id="email" name="email">
+	</div>
+	<div class="form-group">
+	  <label for="clave">Clave:</label>
+	  <input type="password" class="form-control" id="clave" name="clave">
+	</div>
+  	<button type="submit" class="btn btn-default">Registrarse</button>
+</form>		
+<% include includes/footer.html %>

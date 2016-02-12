@@ -1,0 +1,28 @@
+<% include includes/head.html %>
+<% include includes/menuRollControlGeneral.html %>
+<h1>Pizzas</h1>
+<a href="/pizzasAgregarForm"><button type="button" class="btn btn-primary">Agregar nueva</button></a>
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Ingredientes</th>
+        <th>Valor base</th>
+        <th>Modificar</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+<% for(var pizza in pizzas){ %>
+      <tr>
+        <td><%= pizzas[pizza].nombre; %></td>
+        <td><%= pizzas[pizza].ingredientes; %></td>
+        <td>$ <%= pizzas[pizza].valor; %></td>
+        <td><a href="/pizzasModificarForm?_id=<%= pizzas[pizza]._id; %>"><span class="glyphicon glyphicon-pencil"></span></a></td>
+        <td><a href="/pizzasEliminar?_id=<%= pizzas[pizza]._id; %>"><span class="glyphicon glyphicon-remove"></span></a></td>
+      </tr>
+<% } %>    
+    </tbody>
+  </table>
+
+<% include includes/footer.html %>

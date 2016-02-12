@@ -1,0 +1,12 @@
+<% include includes/head.html %>
+<% if(logueado){ %>
+  <% include includes/menuUsuario.html %>
+<% }else{ %>
+  <% include includes/menuLibreAcceso.html %>
+<% } %>
+<h1>Pizzería</h1>
+<% if(logueado){ %>
+<p><%= mensajeBienvenida %></p>
+<% } %>
+
+<% include includes/footer.html %>

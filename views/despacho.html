@@ -1,0 +1,109 @@
+<% include includes/head.html %>
+<% include includes/menuRollCocinaDespacho.html %>
+        <h1>Despacho</h1>
+        <table id="estadoDespacho" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>cliente</th>
+                    <th>En despacho</th>
+                    <th>Entregado</th>
+                    <th>Rechazado</th>
+                </tr>
+            </thead>
+            <tbody>
+            <!-- contenido dinámico por sockets -->
+            </tbody>
+        </table>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    $(document).ready(function(){
+    //socket
+        var socket = io('/SK_despacho');
+        //evento 'connect'
+        socket.on('connect', function(data) {
+            socket.emit('despachoConectado', 'se conectó un dispositivo de despacho: ');
+        });
+        //evento 'actualizacion'
+        socket.on('actualizacion', function(docs) {
+            for(var doc in docs){
+                var estePedido=docs[doc];
+                switch (estePedido.estadoDespacho) {
+                    case 'en-despacho':
+                    $('#estadoDespacho tbody').prepend('<tr id="'+estePedido.idPedido+'"><td>'+estePedido.pedido+'</td><td>'+estePedido.cliente+'</td><td class="enDespacho"><span>X</span></td><td class="entregado"><span>-</span></td><td class="rechazado"><span>-</span></td></tr>');
+                        break;
+                    case '-entregado-':
+                    $('#estadoDespacho tbody').prepend('<tr id="'+estePedido.idPedido+'"><td>'+estePedido.pedido+'</td><td>'+estePedido.cliente+'</td><td class="enDespacho"><span>-</span></td><td class="entregado"><span>X</span></td><td class="rechazado"><span>-</span></td></tr>');
+                        break;
+                    case '-rechazado-':
+                    $('#estadoDespacho tbody').prepend('<tr id="'+estePedido.idPedido+'"><td>'+estePedido.pedido+'</td><td>'+estePedido.cliente+'</td><td class="enDespacho"><span>-</span></td><td class="entregado"><span>-</span></td><td class="rechazado"><span>X</span></td></tr>');
+                        break;
+                }
+            }
+            asignarCursorPointer();
+        });
+        //evento 'pedidoPreparado'
+        socket.on('pedidoPreparado', function(infoPedido) {
+            $('#estadoDespacho tbody').prepend('<tr id="'+infoPedido.id+'"><td>'+infoPedido.pedido+'</td><td>'+infoPedido.cliente+'</td><td class="enDespacho"><span>X</span></td><td class="entregado"><span>-</span></td><td class="rechazado"><span>-</span></td></tr>');
+            asignarCursorPointer();
+        });
+        //evento 'despachoCancelado'
+        socket.on('despachoCancelado', function(infoPedido) {
+            $('#estadoDespacho tbody').find('#'+infoPedido.id).remove();
+        });
+        //evento 'cambioEstadoDespacho'
+        socket.on('cambioEstadoDespacho', function(infoEstadoDespacho) {
+            //console.log(infoEstadoDespacho.id+' | '+infoEstadoDespacho.estado);
+            var nuevoEstado=infoEstadoDespacho.estado;
+            //console.log(nuevoEstado);
+                switch(nuevoEstado) {
+                    case 'estadoDespachoEnDespacho':
+                    nuevoEstado='<td class="enDespacho"><span>X</span></td><td class="entregado"><span>-</span></td><td class="rechazado"><span>-</span></td>';
+                        break;
+                    case 'estadoDespachoEntregado':
+                        nuevoEstado='<td class="enDespacho"><span>-</span></td><td class="entregado"><span>X</span></td><td class="rechazado"><span>-</span></td>';
+                        break;
+                    case 'estadoDespachoRechazado':
+                        nuevoEstado='<td class="enDespacho"><span>-</span></td><td class="entregado"><span>-</span></td><td class="rechazado"><span>X</span></td>';
+                        break;
+                }        
+            //console.log(nuevoEstado);
+            $('#estadoDespacho tbody').find('#'+infoEstadoDespacho.id+' .enDespacho').remove();
+            $('#estadoDespacho tbody').find('#'+infoEstadoDespacho.id+' .entregado').remove();
+            $('#estadoDespacho tbody').find('#'+infoEstadoDespacho.id+' .rechazado').remove();
+            $('#estadoDespacho tbody').find('#'+infoEstadoDespacho.id).append(nuevoEstado);
+            asignarCursorPointer();
+        });
+        //ADMINISTRACIÓN DE CLICK PARA '.enDespacho', '.entregado' Y '.rechazado'
+            //click sobre '.enDespacho'
+            $('#estadoDespacho tbody').on('click', '.enDespacho', function(){
+                procesarClickDespacho('estadoDespachoEnDespacho',$(this));});
+            //click sobre '.entregado'
+            $('#estadoDespacho tbody').on('click', '.entregado', function(){
+                procesarClickDespacho('estadoDespachoEntregado',$(this));});
+            //click sobre '.rechazado'
+            $('#estadoDespacho tbody').on('click', '.rechazado', function(){
+                procesarClickDespacho('estadoDespachoRechazado',$(this));});
+            //función común para clases '.enDespacho', '.entregado' Y '.rechazado'
+            function procesarClickDespacho(estado,este){
+                //enviar el id del pedido sobre el que se presionó algún estado
+                var infoEstadoDespacho={
+                        id:este.parent('tr').attr('id'),
+                        estado:estado
+                    };
+                socket.emit('cambioEstadoDespacho', infoEstadoDespacho);
+                //console.log(infoEstadoDespacho.id+' | '+infoEstadoDespacho.estado);
+            }
+        //CSS PARA ELEMENTOS DINÁMICOS
+            function asignarCursorPointer(){
+                $('.enDespacho span, .entregado span, .rechazado span').css('cursor', 'pointer');
+            }
+    });
+    </script>
+    </body>
+</html>  

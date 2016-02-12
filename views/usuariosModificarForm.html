@@ -1,0 +1,28 @@
+<% include includes/head.html %>
+<% include includes/menuUsuario.html %>
+<h1>Modificar datos</h1>
+<form role="form" method="POST" action="/usuariosModificar">
+	<div class="form-group">
+	  <label for="nombre">Nombre:</label>
+	  <input type="text" class="form-control" id="nombre" name="nombre" value="<%= nombre %>">
+	</div>
+	<div class="form-group">
+	  <label for="apellido">Apellido:</label>
+	  <input type="text" class="form-control" id="apellido" name="apellido" value="<%= apellido %>">
+	</div>
+	<div class="form-group">
+	  <label for="direccion">Dirección:</label>
+	  <input type="text" class="form-control" id="direccion" name="direccion" value="<%= direccion %>">
+	</div>
+	<div class="form-group">
+	  <label for="telefono">Teléfono:</label>
+	  <input type="text" class="form-control" id="telefono" name="telefono" value="<%= telefono %>">
+	</div>
+	<div class="form-group">
+	  <label for="email">Email:</label>
+	  <input type="email" class="form-control" id="email" name="email" value="<%= email %>">
+	</div>
+	<input type="hidden" name="_id" value="<%= _id %>">
+  	<button type="submit" class="btn btn-default">Guardar cambios</button>
+</form>		
+<% include includes/footer.html %>

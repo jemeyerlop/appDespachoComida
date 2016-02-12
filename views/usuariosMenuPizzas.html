@@ -1,0 +1,159 @@
+<% include includes/head.html %>
+<% if(logueado){ %>
+  <% include includes/menuUsuario.html %>
+<% }else{ %>
+  <% include includes/menuLibreAcceso.html %>
+<% } %>
+  <h1>Menú de pizzas</h1>
+      <div class="row">
+        <div class="col-xs-12">
+  <% for(var pizza in pizzas){ %>
+          <div class="well well-lg">
+            <div class="row">   
+              <div class="col-xs-12 col-md-9">
+                <div class="col-xs-12">
+                  <h3><%= pizzas[pizza].nombre %></h3>
+                </div>
+                <div class="col-xs-12">
+                  <p><%= pizzas[pizza].ingredientes %></p>
+                </div>
+              </div>
+              <div class="col-xs-12 col-md-3">
+                <div class="col-xs-12">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Tamaño</th>
+                        <th>Valor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Individual</td>
+                        <td>$ <%= pizzas[pizza].valor*0.8 %></td>
+                      </tr>
+                      <tr>
+                        <td>Mediana</td>
+                        <td>$ <%= pizzas[pizza].valor %></td>
+                      </tr>
+                      <tr>
+                        <td>Familiar</td>
+                        <td>$ <%= pizzas[pizza].valor*1.2 %></td>
+                      </tr>
+                    </tbody>
+                  </table>       
+                </div>
+                <div class="col-xs-12">
+                <% if(logueado){ %>
+                  <button type="button" class="btn btn-info botonItem" data-toggle="modal" data-target="#myModal" data-nombreProducto="<%= pizzas[pizza].nombre %>" id="<%= pizzas[pizza]._id %>">Agregar una</button>
+                <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+  <% } %>
+        </div>
+      </div>
+    <!-- Modal -->
+      <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Elija cantidad, masa y tamaño</h4>
+            </div>
+            <div class="modal-body">
+              <form role="form" id="caracteristicasPizza">
+                <div class="row">
+                <input type="hidden" name="_idItem" value="">
+                <input type="hidden" name="nombreProducto" value="">
+                  <div class="col-xs-12 col-sm-4">
+                    <div class="form-group">
+                      <label for="cantidad">Cantidad</label>
+                      <select class="form-control" name="cantidad">
+                        <option selected>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4">
+                    <label for="masa">Masa:</label>                
+                    <div class="radio">
+                      <label><input type="radio" name="masa" value="delgada">Delgada</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="masa" value="mediana" checked>Mediana</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="masa" value="gruesa">Gruesa</label>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4">
+                    <label for="tamanio">Tamaño:</label>                
+                    <div class="radio">
+                      <label><input type="radio" name="tamanio" value="individual">Individual</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="tamanio" value="mediano" checked>Mediano</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="tamanio" value="familiar">Familiar</label>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-default">Agregar en carro</button>
+              </form>
+              <h4 class="modal-title">Pedido agregado</h4>
+              <h4 class="modal-title">Error de conexión</h4>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-info" data-dismiss="modal">Seguir agregando</button>
+              <a href="/cliente" class="btn btn-success" role="button">Hacer pedido</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Fin Modal -->
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    $(document).ready(function(){
+
+      $('.botonItem').click(function(event) {
+        $('#myModal .modal-header').show();
+        $('#myModal .modal-body form').show();
+        $('#myModal .modal-body .modal-title:first-of-type').hide();
+        $('#myModal .modal-body .modal-title:last-of-type').hide();
+        $('#myModal .modal-footer').hide();
+        var _idItem=$(this).attr('id');
+        $('#caracteristicasPizza [name="_idItem"]').attr('value', _idItem);
+        var nombreProducto=$(this).attr('data-nombreProducto');
+        $('#caracteristicasPizza [name="nombreProducto"]').attr('value', nombreProducto);
+      });
+
+      $('#caracteristicasPizza').submit(function( event ) {
+        $('#myModal .modal-header').hide();
+        $('#myModal .modal-body form').hide();
+        $('#myModal .modal-footer').show();
+        datosPizza=$(this).serialize();
+        $.post( "clienteCarro", datosPizza, function(data) {
+          if (data) {
+            $('#myModal .modal-body .modal-title:first-of-type').show();
+          } else{
+            $('#myModal .modal-body .modal-title:last-of-type').show();
+          };          
+        });
+        event.preventDefault();
+      });
+    });
+    </script>
+    </body>
+</html>  

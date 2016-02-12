@@ -1,0 +1,24 @@
+<% include includes/head.html %>
+<% include includes/menuRollControlGeneral.html %>
+<h1>Administradores</h1>
+<a href="/administradoresAgregarForm"><button type="button" class="btn btn-primary">Agregar nuevo</button></a>
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Administrador</th>
+        <th>Roll</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+<% for(var administrador in administradores){ %>
+      <tr>
+        <td><%= administradores[administrador].administrador; %></td>
+        <td><%= administradores[administrador].roll; %></td>
+        <td><a href="/administradoresEliminar?_id=<%= administradores[administrador]._id; %>"><span class="glyphicon glyphicon-remove"></span></a></td>
+      </tr>
+<% } %>    
+    </tbody>
+  </table>
+
+<% include includes/footer.html %>

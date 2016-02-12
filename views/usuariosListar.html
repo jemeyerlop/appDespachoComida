@@ -1,0 +1,29 @@
+<% include includes/head.html %>
+<% include includes/menuRollControlGeneral.html %>
+<h1>Usuarios</h1>
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+<% for(var usuario in usuarios){ %>
+      <tr>
+        <td><%= usuarios[usuario].nombre; %></td>
+        <td><%= usuarios[usuario].apellido; %></td>
+        <td><%= usuarios[usuario].direccion; %></td>
+        <td><%= usuarios[usuario].telefono; %></td>
+        <td><%= usuarios[usuario].email; %></td>
+        <td><a href="/usuariosEliminar?_id=<%= usuarios[usuario]._id; %>"><span class="glyphicon glyphicon-remove"></span></a></td>
+      </tr>
+<% } %>    
+    </tbody>
+  </table>
+
+<% include includes/footer.html %>
