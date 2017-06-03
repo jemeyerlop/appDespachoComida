@@ -90,19 +90,26 @@ function hashPW(pwd){
         //extraer datos de url
         var url_parts = url.parse(req.url, true);
         var url_query = url_parts.query;
-        //eliminar en bd
-        administradoresModel.remove({_id: url_query._id}, function (err){
-          if(err){
-            console.log(err);
-            res.render('administradoresEliminar.html', {
-              mensaje: 'Hubo un error'
-            });
-          }else{
-            res.render('administradoresEliminar.html', {
-              mensaje: 'Administrador eliminado'
-            });
-          }
-        });
+        if (req.session.administrador._id != url_query._id) {
+          //eliminar en bd
+          administradoresModel.remove({_id: url_query._id}, function (err){
+            if(err){
+              console.log(err);
+              res.render('administradoresEliminar.html', {
+                mensaje: 'Hubo un error'
+              });
+            }else{
+              res.render('administradoresEliminar.html', {
+                mensaje: 'Administrador eliminado'
+              });
+            }
+          });
+        } else {
+          console.log('Intentó eliminarse a si mismo');
+          res.render('administradoresEliminar.html', {
+            mensaje: 'No puede eliminarse a si mismo'
+          });
+        }
     } else {
         res.redirect('/administradoresLoginForm');
     } 
