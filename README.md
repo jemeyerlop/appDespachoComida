@@ -7,10 +7,10 @@ Instrucciones para la demo
 
 1. Para los enlaces señalados abajo, abrir y loguearse en cada uno de ellos desde un dispositivo o navagador distinto, de tal manera que los 4 usuarios (uno por enlace) puedan estar simultaneamente logueados e interactuar entre si
 
-- <a href="http://appjemeyerlop.us-3.evennode.com/administradoresLoginForm" target="_blank">Loguearse a control general (administrador: administrador | clave: 1234)</a>
-- <a href="http://appjemeyerlop.us-3.evennode.com/administradoresLoginForm" target="_blank">Loguearse a cocina (administrador: cocina | clave: 1234)</a>
-- <a href="http://appjemeyerlop.us-3.evennode.com/administradoresLoginForm" target="_blank">Loguearse a despacho (administrador: despacho | clave: 1234)</a>
-- <a href="http://appjemeyerlop.us-3.evennode.com/usuariosLoginForm" target="_blank">Loguearse a cliente (email: cliente@gmail.com | clave: 1234)</a>
+- <a href="http://appjemeyerlop.us-3.evennode.com/administradoresLoginForm">Loguearse a control general</a> (administrador: administrador | clave: 1234)
+- <a href="http://appjemeyerlop.us-3.evennode.com/administradoresLoginForm">Loguearse a cocina</a> (administrador: cocina | clave: 1234)
+- <a href="http://appjemeyerlop.us-3.evennode.com/administradoresLoginForm">Loguearse a despacho</a> (administrador: despacho | clave: 1234)
+- <a href="http://appjemeyerlop.us-3.evennode.com/usuariosLoginForm">Loguearse a cliente</a> (email: cliente@gmail.com | clave: 1234)
 
 2. Posteriormente, en el sitio del cliente, en la sección 'Pizzas', añadir productos al carro y luego en la sección 'Hacer pedido' realizar el pedido
 
